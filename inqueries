@@ -1,0 +1,6 @@
+What are decorators? What do they do/what do they do in this context?
+
+In regards to the Discord library, what does "ctx" *really* mean? (Not just "context")
+
+What are asynchronous functions? How do they work/how do they work in this context?
+    What does the keyword "await" mean/do?
