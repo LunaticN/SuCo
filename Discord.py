@@ -1,5 +1,4 @@
 from LeagueRiot import League
-import os
 import discord
 import json
 from discord.ext import commands
@@ -20,7 +19,7 @@ async def ping(ctx):
 
 
 @client.command()
-async def ref(ctx, game):
+async def help(ctx, game):
     if game.upper() == "LEAGUE" or game.upper() == "LOL":
         embed = discord.Embed(title=" ", description="SuCo prefix: !")
         embed.set_author(name="SuCo Command Reference | League of Legends",
@@ -54,18 +53,19 @@ async def ranked(ctx, choice):
     embed = discord.Embed(color=0xde3753)
     embed.set_thumbnail(url=player.profile_icon)
     embed.add_field(name=player.game_name, value="", inline=False)
-    if len(info) == 0:
+    if len(info) == 0: #something is up with this...
+        print("reached else")
         embed.add_field(name="Ranked " + choice.upper(), value="Unranked", inline=True)
     # the else portion doesn't exactly work but i need to handle unranked players
     else:
         embed.add_field(name="Ranked " + choice.upper(), value=info['tier'] + " " + info['rank'], inline=True)
-        print("reached else")
     await ctx.send(embed=embed)
 
 
 @client.command()
 async def puuid(ctx):
     await ctx.send(player.puuid)
+
 
 @client.command()
 async def id(ctx):
@@ -75,7 +75,8 @@ async def id(ctx):
     # next thing: make this into an embed using the information from summoner_info and the player icon instance
     # variable.
 
+file = open("config.json")
+config = json.load(file)
+print(config["TOKEN"])
 
-with open('config.json') as file:
-    config = json.loads(file)
-    client.run(config["TOKEN"])
+client.run(config["TOKEN"])

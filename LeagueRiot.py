@@ -2,6 +2,7 @@ import os
 import requests
 import json
 
+
 class League:
     def __init__(self, game_name, tag_line, region_code, region):
         self.game_name = game_name
@@ -10,9 +11,9 @@ class League:
         self.region = region  # make this a parameter that users put in using like a dropbox thing or something in an
         # embedded discord message..?
 
-        with open('config.json') as file:
-            config = json.loads(file)
-            self.rgapi = config["RGAPI"]
+        file = open("config.json")
+        config = json.load(file)
+        self.rgapi = config["RGAPI"]
 
         summoner_v4 = json.loads(requests.get(
             ("https://{0}.api.riotgames.com/lol/summoner/v4/summoners/by-name/{1}?api_key=" + self.rgapi).format(
