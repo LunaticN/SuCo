@@ -21,3 +21,7 @@ SuCo (but not shit)
             - creates instances of players using inputs from discord.py
             - retrieves information using rgapi and riotwatcher api (lolwatcher)
                 (/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine} -->
+
+
+https://discord.com/developers/applications/1110331978710003782/bot
+https://developer.riotgames.com
