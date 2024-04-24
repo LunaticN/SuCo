@@ -1,35 +1,34 @@
-import os
 import requests
 import json
 
 
 class League:
-    def __init__(self, game_name, tag_line, region_code, region):
+    def __init__(self, game_name, tag_line, prv, rrv):
         self.game_name = game_name
         self.tag_line = tag_line
-        self.region_code = region_code
-        self.region = region  # make this a parameter that users put in using like a dropbox thing or something in an
-        # embedded discord message..?
+        self.prv = prv  # platform routing value
+        self.rrv = rrv  # regional routing value
 
         file = open("config.json")
         config = json.load(file)
         self.rgapi = config["RGAPI"]
 
-        summoner_v4 = json.loads(requests.get(
-            ("https://{0}.api.riotgames.com/lol/summoner/v4/summoners/by-name/{1}?api_key=" + self.rgapi).format(
-                self.region_code, self.game_name)).text)
-        self.puuid = summoner_v4["puuid"]
+        account_v1 = json.loads(requests.get(("https://{0}.api.riotgames.com/riot/account/v1/accounts/by-riot-id"
+                                              "/{1}/{2}?api_key=" + self.rgapi).format(self.rrv, self.game_name,
+                                                                                       self.tag_line)).text)
+        self.puuid = account_v1['puuid']
+
+        summoner_v4 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{"
+                                               "1}?api_key=" + self.rgapi).format(self.prv, self.puuid)).text)
+        self.summoner_id = summoner_v4["id"]  # also referred to as 'id' & 'encryptedSummonerId'
         self.account_id = summoner_v4["accountId"]
-        self.id = summoner_v4["id"]
         self.profile_icon = "https://ddragon-webp.lolmath.net/latest/img/profileicon/{0}.webp".format(
             summoner_v4["profileIconId"])
-        # how many of these shits do i realistically need??^^
-        # maybe add summonerLevel in constructor
 
     def champion_mastery(self, champion_id):
         champion = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries"
                                             "/by-puuid/{1}/by-champion/{2}?api_key=" + self.rgapi).format(
-            self.region_code, self.puuid, champion_id)).text)
+            self.prv, self.puuid, champion_id)).text)
         # del champion["puuid"]
         # del champion["summonerId"]
         return champion
@@ -37,7 +36,7 @@ class League:
     def ranked(self, choice):  # retrieves rank regardless of choice???
         summoner = json.loads(requests.get(
             ("https://{0}.api.riotgames.com/lol/league/v4/entries/by-summoner/{1}?api_key=" + self.rgapi).format(
-                self.region_code, self.id)).text)
+                self.prv, self.summoner_id)).text)
         choice_queue = ""
         if choice == "solo" or "duo" or "solo/duo":
             choice_queue = "RANKED_SOLO_5x5"

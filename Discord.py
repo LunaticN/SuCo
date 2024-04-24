@@ -19,7 +19,7 @@ async def ping(ctx):
 
 
 @client.command()
-async def help(ctx, game):
+async def ref(ctx, game):
     if game.upper() == "LEAGUE" or game.upper() == "LOL":
         embed = discord.Embed(title=" ", description="SuCo prefix: !")
         embed.set_author(name="SuCo Command Reference | League of Legends",
@@ -77,6 +77,4 @@ async def id(ctx):
 
 file = open("config.json")
 config = json.load(file)
-print(config["TOKEN"])
-
 client.run(config["TOKEN"])
