@@ -29,8 +29,6 @@ class League:
         champion = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries"
                                             "/by-puuid/{1}/by-champion/{2}?api_key=" + self.rgapi).format(
             self.prv, self.puuid, champion_id)).text)
-        # del champion["puuid"]
-        # del champion["summonerId"]
         return champion
 
     def ranked(self, choice):  # retrieves rank regardless of choice???
@@ -48,13 +46,62 @@ class League:
                 return summoner[i]
         return "SuCo could not find the queue data for this summoner. Please try again with a different queue."
 
-# https://www.communitydragon.org/documentation/assets|
-# inspo: https://imgur.com/a/PCvIY3w
-
-# region_code = "na1" # BR1, EUN1, EUW1, LA1, LA2, NA1, OC1, RU1, TR1, JP1, KR, PH2, SG2, TW2, TH2, VN2
-# print(champion_mastery[4]["championId"])
-# rank = "DIAMOND"
-# division = "III"
-
-# ranked_search = json.loads(requests.get(("https://oc1.api.riotgames.com/lol/league-exp/v4/entries/RANKED_SOLO_5x5/CHALLENGER/I?page=1&api_key=" + RGAPI)).text)
-# print(ranked_search)
+    def matches(self, count):
+        match_v5 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/by-puuid/{"
+                                            "1}/ids?start=0&count={2}&api_key=" + self.rgapi).format(self.rrv,
+                                                                                                     self.puuid,
+                                                                                                     count)).text)
+        match_info_kahuna = list()
+        for i in range(len(match_v5)):
+            match_data = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/{1}?api_key=" +
+                                                  self.rgapi).format(self.rrv, match_v5[i])).text)
+            info = match_data["info"]
+            info = info["participants"]
+            players = list()
+            for player in info:
+                challenges = player["challenges"]
+                info_set = {
+                    "kills": player["kills"],
+                    "assists": player["assists"],
+                    "deaths": player["deaths"],
+                    "kda": challenges["kda"],
+                    "champLevel": player["champLevel"],  # champion related info
+                    "championId": player["championId"],
+                    "championName": player["championName"],
+                    "championImg": "https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{0}.png"
+                    .format(player["championName"]),
+                    "teamPosition": player["teamPosition"],
+                    "goldEarned": player["goldEarned"],
+                    "wardsPlaced": player["wardsPlaced"],
+                    "wardsKilled": player["wardsKilled"],
+                    "win": player["win"],
+                    "puuid": player["puuid"],
+                    "totalDamageDealtToChampions": player["totalDamageDealtToChampions"],
+                    "physicalDamageDealtToChampions": player["physicalDamageDealtToChampions"],
+                    "magicDamageDealtToChampions": player["magicDamageDealtToChampions"],
+                    "trueDamageDealtToChampions": player["trueDamageDealtToChampions"],
+                    "doubleKills": player["doubleKills"],
+                    "tripleKills": player["tripleKills"],
+                    "quadraKills": player["quadraKills"],
+                    "pentaKills": player["pentaKills"],
+                    "summonerLevel": player["summonerLevel"],
+                    "baronKills": player["baronKills"],
+                    "magicDamageTaken": player["magicDamageTaken"],
+                    "physicalDamageTaken": player["physicalDamageTaken"],
+                    "trueDamageTaken": player["trueDamageTaken"],
+                    "totalDamageTaken": player["totalDamageTaken"],
+                    "maxCsAdvantageOnLaneOpponent": challenges["maxCsAdvantageOnLaneOpponent"],
+                }
+                players.append(info_set)
+            match_info_kahuna.append(players)
+            ginfo = match_data["info"]
+            general_info = {
+                "gameDuration": round(ginfo["gameDuration"] / 60),
+                "gameCreation": ginfo["gameCreation"],
+                "mapId": ginfo["mapId"],
+                "endOfGameResult": ginfo["endOfGameResult"],
+                "gameMode": ginfo["gameMode"],
+                "gameType": ginfo["gameType"],
+            }
+            match_info_kahuna.append(general_info)
+        return match_info_kahuna

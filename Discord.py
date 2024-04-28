@@ -53,7 +53,7 @@ async def ranked(ctx, choice):
     embed = discord.Embed(color=0xde3753)
     embed.set_thumbnail(url=player.profile_icon)
     embed.add_field(name=player.game_name, value="", inline=False)
-    if len(info) == 0: #something is up with this...
+    if len(info) == 0:  # something is up with this...
         print("reached else")
         embed.add_field(name="Ranked " + choice.upper(), value="Unranked", inline=True)
     # the else portion doesn't exactly work but i need to handle unranked players
@@ -63,17 +63,69 @@ async def ranked(ctx, choice):
 
 
 @client.command()
+async def embedpages(ctx):  # use this for match data
+    page = discord.Embed(title='null',
+                         description='null',
+                         colour=discord.Colour.orange())
+    pages = [page for x in range(10)]
+    for i in range(10):
+        pager = discord.Embed(
+            title='Page' + str(i + 1),
+            description='Description',
+            colour=discord.Colour.orange()
+        )
+        pages[i] = pager
+
+    message = await ctx.send(embed=pages[0])
+    await message.add_reaction('⏮')
+    await message.add_reaction('◀')
+    await message.add_reaction('▶')
+    await message.add_reaction('⏭')
+
+    def check(reaction, user):
+        return user == ctx.author
+
+    i = 0
+    reaction = None
+
+    while True:
+        if str(reaction) == '⏮':
+            i = 0
+            await message.edit(embed=pages[i])
+        elif str(reaction) == '◀':
+            if i > 0:
+                i -= 1
+                await message.edit(embed=pages[i])
+        elif str(reaction) == '▶':
+            if i < (len(pages) - 1):
+                i += 1
+                await message.edit(embed=pages[i])
+        elif str(reaction) == '⏭':
+            i = (len(pages) - 1)
+            await message.edit(embed=pages[i])
+
+        try:
+            reaction, user = await client.wait_for('reaction_add', timeout=30.0, check=check)
+            await message.remove_reaction(reaction, user)
+        except:
+            break
+
+    await message.clear_reactions()
+
+
+@client.command()
 async def puuid(ctx):
     await ctx.send(player.puuid)
 
 
 @client.command()
 async def id(ctx):
-    await ctx.send(player.id)
+    await ctx.send(player.summoner_id)
 
     # await ctx.send(player.summoner_info(choice.lower()))
     # next thing: make this into an embed using the information from summoner_info and the player icon instance
     # variable.
+
 
 file = open("config.json")
 config = json.load(file)
