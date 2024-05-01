@@ -70,6 +70,8 @@ class League:
                     "championName": player["championName"],
                     "championImg": "https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{0}.png"
                     .format(player["championName"]),
+                    "riotIdGameName": player["riotIdGameName"],
+                    "riotIdTagline": player["riotIdTagline"],
                     "teamPosition": player["teamPosition"],
                     "goldEarned": player["goldEarned"],
                     "wardsPlaced": player["wardsPlaced"],
