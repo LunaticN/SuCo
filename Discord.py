@@ -1,4 +1,4 @@
-from LeagueRiot import League
+from Riot import League
 import discord
 import json
 from discord.ext import commands
