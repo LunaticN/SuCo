@@ -1,27 +1,10 @@
-SuCo (but not shit)
-    discord.py (runner class)
-        - output to discord bot
-        - pulls inputs from discord and calls functions from lol_riot.py and val_riot.py
-
-        LOL:
-            "!help"
-                help page embed
-            "![summoner info]"
-                creates League object of said summoner (switches over only when this specific function is used again)
-                embed containing ign, profile icon, and information from the summoner_info class
-            "![champion mastery]"
-                embed containing information from champion mastery function
-                maybe i should have a mass list that shows all the champions in the users possession pop up and then a command to index a particular champion
-                    "oh heres a list of champions, please punch in the number you'd like stats for"
-                icons of art for each champion
-
-
-    lol_riot.py
-        - lol_riot object
-            - creates instances of players using inputs from discord.py
-            - retrieves information using rgapi and riotwatcher api (lolwatcher)
-                (/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine} -->
-
-
-https://discord.com/developers/applications/1110331978710003782/bot
-https://developer.riotgames.com
+SuCo structure
+    !reference
+        Establish Riot Account
+            -> League of Legends
+                -> Ranked
+                -> Matches
+                -> Champion Mastery
+            -> Teamfight Tactics
+                -> Ranked
+                -> Matches

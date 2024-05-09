@@ -3,17 +3,21 @@ import json
 
 
 class Teamfight:
-    def __init__(self, game_name, tag_line, prv, rrv):
-        self.game_name = game_name
-        self.tag_line = tag_line
-        self.prv = prv  # platform routing value
-        self.rrv = rrv  # regional routing value
+    def __init__(self, account):
+        self.account = account
 
-        file = open("config.json")
-        config = json.load(file)
-        self.rgapi = config["RGAPI"]
+    def ranked(self, choice):
+        summoner = json.loads(requests.get(("https://{0}.api.riotgames.com/tft/league/v1/entries/by-summoner/{"
+                                            "1}?api_key=" + self.account.rgapi).format(self.account.prv,
+                                                                                       self.account.summoner_id)).text)
+        choice_queue = ""
+        if choice == "double" or "double up" or "doubleup":
+            choice_queue = "RANKED_TFT_DOUBLE_UP"
+        if choice == "":
+            choice_queue = "RANKED_TFT"
 
-        account_v1 = json.loads(requests.get(("https://{0}.api.riotgames.com/riot/account/v1/accounts/by-riot-id"
-                                              "/{1}/{2}?api_key=" + self.rgapi).format(self.rrv, self.game_name,
-                                                                                       self.tag_line)).text)
-        self.puuid = account_v1['puuid']
+        for i in range(len(summoner)):
+            if summoner[i].get('queueType') == choice_queue:
+                return summoner[i]
+        return "SuCo could not find the queue data for this summoner. Please try again with a different queue."
+

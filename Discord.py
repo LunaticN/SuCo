@@ -1,7 +1,10 @@
-from Riot import League
+from League import League
+from Teamfight import Teamfight
 import discord
 import json
 from discord.ext import commands
+
+#RESTRUCTURE THIS ENTIRELY
 
 intents = discord.Intents.default()
 intents.message_content = True

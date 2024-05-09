@@ -13,10 +13,9 @@ class League:
         return champion
 
     def ranked(self, choice):  # retrieves rank regardless of choice???
-        summoner = json.loads(requests.get(
-            (
-                        "https://{0}.api.riotgames.com/lol/league/v4/entries/by-summoner/{1}?api_key=" + self.account.rgapi).format(
-                self.account.prv, self.account.summoner_id)).text)
+        summoner = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/league/v4/entries/by-summoner/{"
+                                            "1}?api_key=" + self.account.rgapi).format(self.account.prv,
+                                                                                       self.account.summoner_id)).text)
         choice_queue = ""
         if choice == "solo" or "duo" or "solo/duo":
             choice_queue = "RANKED_SOLO_5x5"
