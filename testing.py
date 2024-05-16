@@ -1,7 +1,7 @@
 # from League import League
 from Riot import Riot
 #
-account = Riot("GodProfits", "3541", "na1", "americas")
+account = Riot("Scruboyo", "她的亲爱的", "na1", "americas")
 # summoner = League(account)
 #
 #
@@ -10,4 +10,4 @@ account = Riot("GodProfits", "3541", "na1", "americas")
 from Teamfight import Teamfight
 summoner = Teamfight(account)
 
-print(summoner.ranked(""))
+print(account.puuid)

@@ -24,5 +24,6 @@ class Riot:
         self.account_id = summoner_v4["accountId"]
         self.profile_icon = "https://ddragon-webp.lolmath.net/latest/img/profileicon/{0}.webp".format(
             summoner_v4["profileIconId"])
+        self.summoner_level = summoner_v4["summonerLevel"]
 
         
