@@ -89,3 +89,5 @@ class League:
             }
             match_info_kahuna.append(general_info)
         return match_info_kahuna
+    # https://ddragon.leagueoflegends.com/cdn/14.10.1/img/item/1001.png
+
