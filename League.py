@@ -1,6 +1,7 @@
 import requests
 import json
 
+#https://developer.riotgames.com/docs/lol#data-dragon_data-assets
 
 class League:
     def __init__(self, account):
