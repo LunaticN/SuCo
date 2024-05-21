@@ -31,27 +31,27 @@ class Teamfight:
         # Need to keep track of traits, total damage to players, kda, units and items, gold left, last round + time eliminated
         # https://developer.riotgames.com/docs/lol#data-dragon_data-assets
         for i in range(len(match_v1)):
-            match_data = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/{1}?api_key=" +
+            match_data = json.loads(requests.get(("https://{0}.api.riotgames.com/tft/match/v1/matches/{1}?api_key=" +
                                                   self.account.rgapi).format(self.account.rrv, match_v1[i])).text)
+            print(match_data)
             info = match_data["info"]
             info = info["participants"]
             players = list()
             for player in info:
                 missions = player["missions"]
                 info_set = {
-                    "placement": player["placement"],
+                    "augments": player["augments"],
                     "players_eliminated": player["players_eliminated"],
-                    "time_eliminated": player["time_eliminated"],
-                    "gameCreation": player["gameCreation"],
                     "gold_left": player["gold_left"],
                     "last_round": player["last_round"],
-                    "augments": player["augments"],
-                    "kills": missions["kills"],
-                    "deaths": missions["deaths"],
-                    "assists": missions["assists"],
-                    "TotalDamageDealtToChampions": player["TotalDamageDealtToChampions"],
-                    "": player[""],
-
+                    "kills": missions["Kills"],
+                    "deaths": missions["Deaths"],
+                    "assists": missions["Assists"],
+                    "TotalDamageDealtToChampions": missions["TotalDamageDealtToChampions"],
+                    "placement": player["placement"],
+                    "time_eliminated": player["time_eliminated"],
+                    "puuid": player["puuid"],
+                    "traits": player["traits"] #maybe figure out how to parse less of this??+
                 }
 
         return match_v1
