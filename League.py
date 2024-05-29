@@ -8,18 +8,23 @@ class League:
         self.account = account
 
     def champion_mastery(self, champion_name):
-        champion_name = champion_name.lower()
-        champion_name_first_letter = champion_name[0].upper()
-        champion_name = champion_name_first_letter + champion_name[1:]
-        champions_data = json.loads(requests.get("https://ddragon.leagueoflegends.com/cdn/14.10.1/data/en_US/champion"
-                                                 ".json").text)
-        champions_data = champions_data["data"]
-        champions_data = champions_data[champion_name]
-        champion_id = champions_data["key"]
+        try:
+            champion_name = champion_name.lower()
+            champion_name_first_letter = champion_name[0].upper()
+            champion_name = champion_name_first_letter + champion_name[1:]
+            champions_data = json.loads(requests.get("https://ddragon.leagueoflegends.com/cdn/14.10.1/data/en_US/champion"
+                                                     ".json").text)
+            champions_data = champions_data["data"]
+            champions_data = champions_data[champion_name]
+            champion_id = champions_data["key"]
 
-        champion = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries"
-                                            "/by-puuid/{1}/by-champion/{2}?api_key=" + self.account.rgapi).format(
-            self.account.prv, self.account.puuid, champion_id)).text)
+            champion = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/champion-mastery/v4/champion-masteries"
+                                                "/by-puuid/{1}/by-champion/{2}?api_key=" + self.account.rgapi).format(
+                self.account.prv, self.account.puuid, champion_id)).text)
+            if 'status' in champion:
+                champion = "No data available for this champion."
+        except:
+            champion = "Unable to find champion :("
         return champion
 
     def ranked(self, choice):  # retrieves rank regardless of choice???

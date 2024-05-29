@@ -8,6 +8,6 @@ summoner = League(account)
 print(account.puuid)
 print(account2.account_id)
 
-print(summoner.champion_mastery("Milio"))
+print(summoner.champion_mastery("qiyana"))
 
 
