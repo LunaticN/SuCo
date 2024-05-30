@@ -27,20 +27,14 @@ class League:
             champion = "Unable to find champion :("
         return champion
 
-    def ranked(self, choice):  # retrieves rank regardless of choice???
-        summoner = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/league/v4/entries/by-summoner/{"
+    def ranked(self):  # retrieves rank regardless of choice???
+        league_v4 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/league/v4/entries/by-summoner/{"
                                             "1}?api_key=" + self.account.rgapi).format(self.account.prv,
                                                                                        self.account.summoner_id)).text)
-        choice_queue = ""
-        if choice == "solo" or "duo" or "solo/duo":
-            choice_queue = "RANKED_SOLO_5x5"
-        if choice == "flex":
-            choice_queue = "RANKED_FLEX_SR"
-
-        for i in range(len(summoner)):
-            if summoner[i].get('queueType') == choice_queue:
-                return summoner[i]
-        return "SuCo could not find the queue data for this summoner. Please try again with a different queue."
+        if len(league_v4) == 0:
+            return "No ranked data present for this user."
+        return league_v4
+        # return "SuCo could not find the queue data for this summoner. Please try again with a different queue."
 
     def matches(self, count):
         match_v5 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/by-puuid/{"
