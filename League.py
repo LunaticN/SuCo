@@ -34,7 +34,6 @@ class League:
         if len(league_v4) == 0:
             return "No ranked data present for this user."
         return league_v4
-        # return "SuCo could not find the queue data for this summoner. Please try again with a different queue."
 
     def matches(self, count):
         match_v5 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/by-puuid/{"
@@ -42,10 +41,18 @@ class League:
             self.account.rrv,
             self.account.puuid,
             count)).text)
+
+        if len(match_v5) == 0:
+            return "Unable to find requested match data for summoner" + self.account.game_name + "#" + \
+                self.account.tag_line
+
         match_info_kahuna = list()
         for i in range(len(match_v5)):
             match_data = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/{1}?api_key=" +
                                                   self.account.rgapi).format(self.account.rrv, match_v5[i])).text)
+            if 'status' in match_data:
+                return "Data for match " + match_v5[i] + "could not be found as the match you are searching for may " \
+                                                         "have expired beyond two years."
             info = match_data["info"]
             info = info["participants"]
             players = list()
@@ -98,5 +105,10 @@ class League:
             }
             match_info_kahuna.append(general_info)
         return match_info_kahuna
+
+    # def aggregate_stats(self):
+    #     # traverse through above array for aggregate stats (kills, deaths, assists, calculated kdr from aforementioned, total damage)
+
+
     # https://ddragon.leagueoflegends.com/cdn/14.10.1/img/item/1001.png
 

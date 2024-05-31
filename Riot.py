@@ -16,6 +16,7 @@ class Riot:
         account_v1 = json.loads(requests.get(("https://{0}.api.riotgames.com/riot/account/v1/accounts/by-riot-id"
                                               "/{1}/{2}?api_key=" + self.rgapi).format(self.rrv, self.game_name,
                                                                                        self.tag_line)).text)
+
         self.puuid = account_v1['puuid']
 
         summoner_v4 = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{"
