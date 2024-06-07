@@ -46,7 +46,7 @@ class League:
             return "Unable to find requested match data for summoner" + self.account.game_name + "#" + \
                 self.account.tag_line
 
-        match_info_kahuna = list()
+        user_matches = list()
         for i in range(len(match_v5)):
             match_data = json.loads(requests.get(("https://{0}.api.riotgames.com/lol/match/v5/matches/{1}?api_key=" +
                                                   self.account.rgapi).format(self.account.rrv, match_v5[i])).text)
@@ -54,61 +54,33 @@ class League:
                 return "Data for match " + match_v5[i] + "could not be found as the match you are searching for may " \
                                                          "have expired beyond two years."
             info = match_data["info"]
-            info = info["participants"]
-            players = list()
-            for player in info:
-                challenges = player["challenges"]
-                info_set = {
-                    "kills": player["kills"],
-                    "assists": player["assists"],
-                    "deaths": player["deaths"],
-                    "kda": challenges["kda"],
-                    "champLevel": player["champLevel"],  # champion related info
-                    "championId": player["championId"],
-                    "championName": player["championName"],
-                    "championImg": "https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{0}.png"
-                    .format(player["championName"]),
-                    "riotIdGameName": player["riotIdGameName"],
-                    "riotIdTagline": player["riotIdTagline"],
-                    "teamPosition": player["teamPosition"],
-                    "goldEarned": player["goldEarned"],
-                    "wardsPlaced": player["wardsPlaced"],
-                    "wardsKilled": player["wardsKilled"],
-                    "win": player["win"],
-                    "puuid": player["puuid"],
-                    "totalDamageDealtToChampions": player["totalDamageDealtToChampions"],
-                    "physicalDamageDealtToChampions": player["physicalDamageDealtToChampions"],
-                    "magicDamageDealtToChampions": player["magicDamageDealtToChampions"],
-                    "trueDamageDealtToChampions": player["trueDamageDealtToChampions"],
-                    "doubleKills": player["doubleKills"],
-                    "tripleKills": player["tripleKills"],
-                    "quadraKills": player["quadraKills"],
-                    "pentaKills": player["pentaKills"],
-                    "summonerLevel": player["summonerLevel"],
-                    "baronKills": player["baronKills"],
-                    "magicDamageTaken": player["magicDamageTaken"],
-                    "physicalDamageTaken": player["physicalDamageTaken"],
-                    "trueDamageTaken": player["trueDamageTaken"],
-                    "totalDamageTaken": player["totalDamageTaken"],
-                    "maxCsAdvantageOnLaneOpponent": challenges["maxCsAdvantageOnLaneOpponent"],
-                }
-                players.append(info_set)
-            match_info_kahuna.append(players)
-            ginfo = match_data["info"]
-            general_info = {
-                "gameDuration": round(ginfo["gameDuration"] / 60),
-                "gameCreation": ginfo["gameCreation"],
-                "mapId": ginfo["mapId"],
-                "endOfGameResult": ginfo["endOfGameResult"],
-                "gameMode": ginfo["gameMode"],
-                "gameType": ginfo["gameType"],
-            }
-            match_info_kahuna.append(general_info)
-        return match_info_kahuna
-
-    # def aggregate_stats(self):
-    #     # traverse through above array for aggregate stats (kills, deaths, assists, calculated kdr from aforementioned, total damage)
-
-
-    # https://ddragon.leagueoflegends.com/cdn/14.10.1/img/item/1001.png
-
+            participants = info["participants"]
+            for j in range(len(participants)):
+                if participants[j]['puuid'] == self.account.puuid:
+                    info_set = {"kills": participants[j]["kills"], "assists": participants[j]["assists"],
+                                "deaths": participants[j]["deaths"], "champLevel": participants[j]["champLevel"],
+                                "championId": participants[j]["championId"], "championName": participants[j]["championName"],
+                                "championImg": "https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{0}.png"
+                                .format(participants[j]["championName"]), "riotIdGameName": participants[j]["riotIdGameName"],
+                                "riotIdTagline": participants[j]["riotIdTagline"],
+                                "teamPosition": participants[j]["teamPosition"], "goldEarned": participants[j]["goldEarned"],
+                                "wardsPlaced": participants[j]["wardsPlaced"], "wardsKilled": participants[j]["wardsKilled"],
+                                "win": participants[j]["win"], "puuid": participants[j]["puuid"],
+                                "totalDamageDealtToChampions": participants[j]["totalDamageDealtToChampions"],
+                                "physicalDamageDealtToChampions": participants[j]["physicalDamageDealtToChampions"],
+                                "magicDamageDealtToChampions": participants[j]["magicDamageDealtToChampions"],
+                                "trueDamageDealtToChampions": participants[j]["trueDamageDealtToChampions"],
+                                "doubleKills": participants[j]["doubleKills"], "tripleKills": participants[j]["tripleKills"],
+                                "quadraKills": participants[j]["quadraKills"], "pentaKills": participants[j]["pentaKills"],
+                                "summonerLevel": participants[j]["summonerLevel"],
+                                "baronKills": participants[j]["baronKills"],
+                                "magicDamageTaken": participants[j]["magicDamageTaken"],
+                                "physicalDamageTaken": participants[j]["physicalDamageTaken"],
+                                "trueDamageTaken": participants[j]["trueDamageTaken"],
+                                "totalDamageTaken": participants[j]["totalDamageTaken"],
+                                "gameCreation": info["gameCreation"],
+                                "gameMode": info["gameMode"],
+                                "mapId": info["mapId"]}
+                    user_matches.append(info_set)
+                    break
+        return user_matches
